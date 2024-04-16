@@ -1,21 +1,18 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
-
-
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { NativeBaseProvider, extendTheme } from "native-base";
+import { useEffect } from "react";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary
-} from 'expo-router';
+  ErrorBoundary,
+} from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tasks)',
+  initialRouteName: "(tasks)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -23,7 +20,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -46,14 +43,43 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const newColorTheme = {
+    accent: {
+      "50": "#f6f4fe",
+      "100": "#eeebfc",
+      "200": "#e0dbf9",
+      "300": "#c9bdf5",
+      "400": "#ad98ed",
+      "500": "#926de5",
+      "600": "#824ed9",
+      "700": "#7743c7",
+      "800": "#5f32a5",
+      "900": "#4f2b87",
+      "950": "#311a5b",
+    },
+  };
+
+  const theme = extendTheme({
+    colors: newColorTheme,
+    components: {
+      Button: {
+        variants: {
+          rounded: ({ colorScheme }: { colorScheme: any }) => {
+            return {
+              bg: `${colorScheme}.500`,
+            };
+          },
+        },
+      },
+    },
+  });
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NativeBaseProvider theme={theme}>
       <Stack>
         <Stack.Screen name="(tasks)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
-    </ThemeProvider>
+    </NativeBaseProvider>
   );
 }
