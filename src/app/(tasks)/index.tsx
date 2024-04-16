@@ -3,22 +3,36 @@ import { StyleSheet } from "react-native";
 import { PrimaryButton } from "@/src/components/StyledButton";
 import { TextInput } from "@/src/components/StyledTextInput";
 
+import { useTasks } from "@/src/contexts/TaskContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { Box } from "native-base";
 import React, { useState } from "react";
 import TaskList from "./components/TaskList";
 
 export default function TasksScreen() {
-  const [value, onChangeText] = useState("Useless Multiline Placeholder");
+  const { addTask } = useTasks();
+
+  const [taskValue, setTaskValue] = useState("");
+
+  const handleAddNewTask = () => {
+    console.log("hasdas");
+
+    addTask(taskValue);
+    setTaskValue("");
+  };
 
   return (
     <Box style={styles.container}>
       <Box style={styles.newTaskContainer}>
-        <TextInput placeholder="e.g. Dar comida pro gato" style={{ flex: 1 }} />
+        <TextInput
+          value={taskValue}
+          onChangeText={(text) => setTaskValue(text)}
+          placeholder="e.g. Dar comida pro gato"
+          style={{ flex: 1 }}
+        />
         <PrimaryButton
-          onPress={() => {}}
-          title={"Criar"}
-          rightIcon={<FontAwesome name="plus" color="white" />}
+          onPress={handleAddNewTask}
+          rightIcon={<FontAwesome name="plus" color={"white"} />}
         >
           Criar tarefa
         </PrimaryButton>

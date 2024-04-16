@@ -1,21 +1,22 @@
 import Task from "@/src/components/Task";
 import { Text } from "@/src/components/Themed";
+import { useTasks } from "@/src/contexts/TaskContext";
 import { Box, ScrollView } from "native-base";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 
 export default function TaskList() {
-  const [taskList, setTaskList] = useState([0]);
+  const { tasks } = useTasks();
 
   return (
     <Box style={styles.tasksContainer}>
-      <Box bg="" style={styles.taskContainerHeader}>
+      <Box style={styles.taskContainerHeader}>
         <Text style={styles.headerTitle}>Tarefas</Text>
       </Box>
 
-      <ScrollView>
-        {taskList.map((task, index) => (
-          <Task key={index} />
+      <ScrollView contentContainerStyle={{ rowGap: 16 }}>
+        {tasks.map((task, index) => (
+          <Task task={task} key={index} />
         ))}
       </ScrollView>
     </Box>
