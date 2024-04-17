@@ -15,8 +15,6 @@ export default function TasksScreen() {
   const [taskValue, setTaskValue] = useState("");
 
   const handleAddNewTask = () => {
-    console.log("hasdas");
-
     addTask(taskValue);
     setTaskValue("");
   };
@@ -29,6 +27,7 @@ export default function TasksScreen() {
           onChangeText={(text) => setTaskValue(text)}
           placeholder="e.g. Dar comida pro gato"
           style={{ flex: 1 }}
+          fontSize={"lg"}
         />
         <PrimaryButton
           onPress={handleAddNewTask}

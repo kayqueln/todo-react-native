@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React, { ReactNode, createContext, useContext, useState } from "react";
 import { ITask } from "../types/Task";
 
@@ -21,6 +22,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({
       id: Math.random().toString(36).substr(2, 9),
       title,
       completed: false,
+      date: format(new Date(), "dd/MM/yy"),
     };
     setTasks([...tasks, newTask]);
   };
