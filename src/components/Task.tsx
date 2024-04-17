@@ -50,7 +50,7 @@ export default function Task({ task }: { task: ITask }) {
         )}
 
         <Text fontSize={"md"} color={"muted.400"} fontWeight={500}>
-          03/04/24
+          {task.date}
         </Text>
       </Box>
 
