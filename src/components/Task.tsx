@@ -1,26 +1,53 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Box, PresenceTransition, Text } from "native-base";
-import React from "react";
+import { Box, Text } from "native-base";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useTasks } from "../contexts/TaskContext";
 import { ITask } from "../types/Task";
 import { PrimaryButton } from "./StyledButton";
+import { TextInput } from "./StyledTextInput";
 
 export default function Task({ task }: { task: ITask }) {
-  const { removeTask } = useTasks();
+  const { removeTask, editTask } = useTasks();
+
+  const [isEditModeEnabled, setIsEditModeEnabled] = useState(false);
+  const [editContent, setEditContent] = useState(task.title);
+
+  const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (isEditModeEnabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditModeEnabled]);
 
   const handleDeleteTask = () => {
-    console.log("hasuhdas");
-
     removeTask(task.id);
   };
 
+  const handleEditTask = () => {
+    editTask(task.id, editContent);
+
+    setIsEditModeEnabled(false);
+  };
+
   return (
-    <PresenceTransition style={styles.taskContainer}>
+    <Box style={styles.taskContainer}>
       <Box style={styles.titleAndDate}>
-        <Text fontSize={"xl"} fontWeight={600}>
-          {task.title}
-        </Text>
+        {isEditModeEnabled ? (
+          <TextInput
+            fRef={inputRef}
+            value={editContent}
+            onChangeText={(text) => setEditContent(text)}
+            padding={1}
+            paddingLeft={2}
+            fontSize={"md"}
+          />
+        ) : (
+          <Text fontSize={"xl"} fontWeight={600}>
+            {task.title}
+          </Text>
+        )}
 
         <Text fontSize={"md"} color={"muted.400"} fontWeight={500}>
           03/04/24
@@ -28,15 +55,37 @@ export default function Task({ task }: { task: ITask }) {
       </Box>
 
       <Box style={styles.actions}>
-        <PrimaryButton
-          leftIcon={<FontAwesome name="pencil" color={"#c9bdf5"} size={20} />}
-        />
-        <PrimaryButton
-          onPress={handleDeleteTask}
-          leftIcon={<FontAwesome name="trash" color={"#c9bdf5"} size={20} />}
-        />
+        {isEditModeEnabled ? (
+          <>
+            <PrimaryButton
+              onPress={handleEditTask}
+              colorScheme="emerald"
+              leftIcon={<FontAwesome name="check" color={"white"} size={20} />}
+            />
+            <PrimaryButton
+              onPress={() => setIsEditModeEnabled(false)}
+              colorScheme={"danger"}
+              leftIcon={<FontAwesome name="close" color={"white"} size={20} />}
+            />
+          </>
+        ) : (
+          <>
+            <PrimaryButton
+              onPress={() => setIsEditModeEnabled(!isEditModeEnabled)}
+              leftIcon={
+                <FontAwesome name="pencil" color={"#c9bdf5"} size={20} />
+              }
+            />
+            <PrimaryButton
+              onPress={handleDeleteTask}
+              leftIcon={
+                <FontAwesome name="trash" color={"#c9bdf5"} size={20} />
+              }
+            />
+          </>
+        )}
       </Box>
-    </PresenceTransition>
+    </Box>
   );
 }
 
@@ -53,10 +102,12 @@ const styles = StyleSheet.create({
     borderColor: "#926de5",
     borderLeftWidth: 6,
     borderWidth: 1,
+    gap: 20,
   },
 
   titleAndDate: {
     display: "flex",
+    flex: 1,
     gap: 10,
   },
 
