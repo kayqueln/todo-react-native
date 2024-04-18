@@ -1,8 +1,7 @@
 import Task from "@/src/components/Task";
 
 import { useTasks } from "@/src/contexts/TaskContext";
-import { FontAwesome } from "@expo/vector-icons";
-import { Box, Center, FlatList, ScrollView, Text } from "native-base";
+import { Box, FlatList, Text } from "native-base";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -17,29 +16,27 @@ export default function TaskList() {
         </Text>
       </Box>
 
-      <ScrollView contentContainerStyle={{ rowGap: 16 }}>
-        <FlatList
-          data={tasks}
-          renderItem={({ item }) => <Task task={item} />}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ rowGap: 16 }}
-          ListEmptyComponent={
-            <>
-              <Center marginY={10} style={styles.emptyList}>
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  Você ainda não criou nenhuma tarefa!
-                </Text>
+      <FlatList
+        data={tasks}
+        renderItem={({ item }) => <Task task={item} />}
+        keyExtractor={(item) => `key-${item.id}`}
+        contentContainerStyle={{ rowGap: 16 }}
+        // ListEmptyComponent={
+        //   <>
+        //     <Center marginY={10} style={styles.emptyList}>
+        //       <Text fontSize={"lg"} fontWeight={"medium"}>
+        //         Você ainda não criou nenhuma tarefa!
+        //       </Text>
 
-                <FontAwesome
-                  name="exclamation-circle"
-                  color={"#bebebe"}
-                  size={60}
-                />
-              </Center>
-            </>
-          }
-        />
-      </ScrollView>
+        //       <FontAwesome
+        //         name="exclamation-circle"
+        //         color={"#bebebe"}
+        //         size={60}
+        //       />
+        //     </Center>
+        //   </>
+        // }
+      />
     </Box>
   );
 }

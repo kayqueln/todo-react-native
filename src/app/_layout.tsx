@@ -72,7 +72,6 @@ function RootLayoutNav() {
     <NativeBaseProvider theme={theme}>
       <Stack>
         <Stack.Screen name="(tasks)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </NativeBaseProvider>
   );

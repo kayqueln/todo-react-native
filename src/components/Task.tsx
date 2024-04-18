@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Box, Text } from "native-base";
+import { Box, PresenceTransition, Text } from "native-base";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useTasks } from "../contexts/TaskContext";
@@ -8,7 +8,7 @@ import { PrimaryButton } from "./StyledButton";
 import { TextInput } from "./StyledTextInput";
 
 export default function Task({ task }: { task: ITask }) {
-  const { removeTask, editTask } = useTasks();
+  const { removeTask, editTask, tasks } = useTasks();
 
   const [isEditModeEnabled, setIsEditModeEnabled] = useState(false);
   const [editContent, setEditContent] = useState(task.title);
@@ -31,8 +31,25 @@ export default function Task({ task }: { task: ITask }) {
     setIsEditModeEnabled(false);
   };
 
+  const doesTaskExist = tasks.find((t) => t.id === task.id);
+
   return (
-    <Box style={styles.taskContainer}>
+    <PresenceTransition
+      pointerEvents="auto"
+      style={styles.taskContainer}
+      visible={doesTaskExist !== undefined}
+      initial={{
+        opacity: 0,
+        scale: 0,
+      }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        transition: {
+          duration: 250,
+        },
+      }}
+    >
       <Box style={styles.titleAndDate}>
         {isEditModeEnabled ? (
           <TextInput
@@ -85,7 +102,7 @@ export default function Task({ task }: { task: ITask }) {
           </>
         )}
       </Box>
-    </Box>
+    </PresenceTransition>
   );
 }
 
